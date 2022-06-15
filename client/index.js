@@ -27,14 +27,16 @@ const contract = new web3.eth.Contract(
   CONTRACT_ADDRESS
 );
 
-let account;
 const accountEl = document.getElementById('account');
 const ticketsEl = document.getElementById('tickets');
+const containerTicketsEl = document.getElementById('Buttickets');
+
+let account;
+let  Buttickets = 0;
 const TOTAL_TICKETS = 4;
 const EMPTY_ADDRESS = '0x0000000000000000000000000000000000000000';
 
 const images = [ beatles, ledzeppelin, mj, nirvana];
-
 const details = [
   'Beatles <br/> Há exatos 48 anos, os Beatles faziam seu último concerto, no Candlestick Park, em São Francisco.', 
   'Led Zeppelin <br/> Show de 1975', 
@@ -45,33 +47,37 @@ const buyTicket = async (ticket) => {
   await contract.methods
     .buyTicket(ticket.id)
     .send({ from: account, value: ticket.price });
+    Buttickets+=1;
   await refreshTickets();
 };
 
 // Layout da aplicação.
-
 const refreshTickets = async () => {
   ticketsEl.innerHTML = '';
-
-  for (let i = 0; i < TOTAL_TICKETS; i++) {
+  
+  for (var i = 0; i < TOTAL_TICKETS; i++) {
     const ticket = await contract.methods.tickets(i).call();
     ticket.id = i;
-
+    
     if (ticket.owner === EMPTY_ADDRESS) {
       const ticketEl = createElementFromString(
 
         `<div class="ticket card" style="width: 18rem;">
           <img src="${images[i]}" class="image card-img-top" alt="...">
-          <div class="card-body">
-            <h5 class="card-title">${details[i]}</h5>
-            <p class="card-text">${
-              ticket.price / 1e17  // 0.1 ETH
-            } Eth</p>
-            <button class="btn btn-primary">Buy Ticket</button>
-          </div>
+            <div class="card-body">
+              <h5 class="card-title">${details[i]}</h5>
+              <p class="card-text">${
+                ticket.price / 1e17  // 0.1 ETH
+              } Eth</p>
+              <button class="btn btn-primary">Buy Ticket</button>
+            </div>
         </div>
         `
       );
+
+      if (Buttickets > 0) {
+        containerTicketsEl.innerHTML = `<h1>Total de tickets vendidos até agora: ${Buttickets}</h1>`
+      }
 
       ticketEl.onclick = buyTicket.bind(null, ticket);
       ticketsEl.appendChild(ticketEl);

@@ -2,6 +2,15 @@
   margin-bottom: 20px;
 }
 
+#tickets {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+#Buttickets {
+  color: #000E10;
+}
+
 .backgound-header {
   box-shadow: #7e7712 0.1em 0.1em 0.2em;
 }
@@ -10,11 +19,6 @@
   color: #7e7712;
   font-weight: bold;
   margin-right: 35%;
-}
-
-#tickets {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
 }
   
 .ticket {
